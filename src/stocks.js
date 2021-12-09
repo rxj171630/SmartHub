@@ -26,11 +26,8 @@ class StocksComponent extends React.Component {
   }
 
   componentDidMount() {
-    fetch("https://yfapi.net/v6/finance/quote?region=US&lang=en&symbols=AAPL,FB,MSFT,GOOG,AMZN", {
-        "headers": {
-            'x-api-key': 'WVRhYOnson33wifwsfdc04eqOwWI5bVm3gWEUzFz'
-        }
-    }).then(res => res.json())
+    fetch("http://127.0.0.1:8000/stocks")
+    .then(res => res.json())
       .then(
         (result) => {
           this.setState({
@@ -39,6 +36,7 @@ class StocksComponent extends React.Component {
           });
         },
         (error) => {
+            console.log(error);
           this.setState({
             isLoaded: true,
             error: error

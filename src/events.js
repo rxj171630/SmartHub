@@ -18,15 +18,15 @@ class EventsComponent extends React.Component {
           return;
       } else {
           var res = []
-          result.articles.forEach(function (item, index) {
-            res.push({header: item.title, description: item.description, meta: item.publishedAt})
+          result.forEach(function (item, index) {
+            res.push({header: item.summary, description: item.description, meta: item.start.date})
           });
           return res.slice(0, 4);
       }
   }
 
   componentDidMount() {
-    fetch("")
+    fetch("http://127.0.0.1:8000/calendar")
       .then(res => res.json())
       .then(
         (result) => {
@@ -45,17 +45,16 @@ class EventsComponent extends React.Component {
   }
 
   render() {
-    // const { error, isLoaded, items } = this.state;
-    // if (error) {
-    //   return <div>Error: {error.message}</div>;
-    // } else if (!isLoaded) {
-    //   return <div>Loading...</div>;
-    // } else {
-    //   return (
-    //       <Card.Group items={items} />
-    //   );
-    // }
-    return <Card.Group items={[{header: "Event1", description: "test", meta: "test"}, {header: "Event2", description: "test", meta: "test"}]} />
+    const { error, isLoaded, items } = this.state;
+    if (error) {
+      return <div>Error: {error.message}</div>;
+    } else if (!isLoaded) {
+      return <div>Loading...</div>;
+    } else {
+      return (
+          <Card.Group items={items} />
+      );
+    }
   }
 }
 

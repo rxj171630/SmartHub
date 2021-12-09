@@ -1,7 +1,7 @@
-import {Card} from 'semantic-ui-react'
+import {Statistic, StatisticGroup} from 'semantic-ui-react'
 import React from 'react'
 
-class NewsComponent extends React.Component {
+class HumidityComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -18,15 +18,15 @@ class NewsComponent extends React.Component {
           return;
       } else {
           var res = []
-          result.articles.forEach(function (item, index) {
-            res.push({header: item.title, description: item.description, meta: item.publishedAt})
+          result.forEach(function (item, index) {
+            res.push({name: item.name, temp: item.runtime.actualTemperature, humidity: item.runtime.actualHumidity})
           });
-          return res.slice(0, 4);
+          return res
       }
   }
 
   componentDidMount() {
-    fetch("http://127.0.0.1:8000/news")
+    fetch("http://127.0.0.1:8000/thermo")
       .then(res => res.json())
       .then(
         (result) => {
@@ -52,10 +52,17 @@ class NewsComponent extends React.Component {
       return <div>Loading...</div>;
     } else {
       return (
-          <Card.Group items={items} />
+          <Statistic.Group>
+          {this.state.items.map(( val, index ) => {
+              return (
+                  <Statistic label={val.name} value={(val.humidity).toString()} />
+                  // <Statistic label='Humidity' value={val.humidity} />
+              );
+          })}
+          </Statistic.Group>
       );
     }
   }
 }
 
-export default NewsComponent
+export default HumidityComponent

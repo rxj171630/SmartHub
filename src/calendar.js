@@ -1,7 +1,7 @@
 import {Card} from 'semantic-ui-react'
 import React from 'react'
 
-class NewsComponent extends React.Component {
+class CalendarComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -19,14 +19,14 @@ class NewsComponent extends React.Component {
       } else {
           var res = []
           result.articles.forEach(function (item, index) {
-            res.push({header: item.title, description: item.description, meta: item.publishedAt})
+            res.push({header: item.summary, meta: item.start.date})
           });
           return res.slice(0, 4);
       }
   }
 
   componentDidMount() {
-    fetch("http://127.0.0.1:8000/news")
+    fetch("http://127.0.0.1:8000/calendar")
       .then(res => res.json())
       .then(
         (result) => {
@@ -58,4 +58,4 @@ class NewsComponent extends React.Component {
   }
 }
 
-export default NewsComponent
+export default CalendarComponent
