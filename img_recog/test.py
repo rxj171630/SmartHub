@@ -110,8 +110,16 @@ def main():
         keyboard = cv.waitKey(30)
         if keyboard == 'q':
             break
+
+        if (labels[label_id] != 'na' and prob > 0.5 and 
+                labels[label_id] == prev_label_id):
+            print("confirmed %s" % labels[label_id])
+        else: 
+            print('na')
+        print("---------------------") 
         print('%s %.2f\n%.1fms' % (labels[label_id], prob, elapsed_ms))
         print()
+        prev_label_id = labels[label_id]
 
     finally:
       camera.stop_preview()
