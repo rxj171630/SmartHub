@@ -12,7 +12,8 @@ with sr.Microphone() as source:
     audio = r.listen(source)
 
 try:
-    print("You said " + r.recognize_google(audio))
+    output = r.recognize_google(audio)
+    print("You said " + output)
 except sr.UnknownValueError:
     print("Could not understand what you said.")
 except sr.RequestError as e:
