@@ -66,11 +66,11 @@ def main():
       formatter_class=argparse.ArgumentDefaultsHelpFormatter)
   parser.add_argument(
       '--model', help='File path of .tflite file.', required=True)
-  parser.add_argument(
-      '--labels', help='File path of labels file.', required=True)
-  args = parser.parse_args()
+  #parser.add_argument(
+  #    '--labels', help='File path of labels file.', required=True)
+  #args = parser.parse_args()
 
-  labels = load_labels(args.labels)
+  labels = load_labels('./labels50na.txt')
 
   
   #backSub = cv.createBackgroundSubtractorMOG2()
@@ -78,57 +78,30 @@ def main():
   
 
 
-  interpreter = Interpreter(args.model)
+  interpreter = Interpreter('./tflites/model_effLite_5or0_withNA.tflite')
   interpreter.allocate_tensors()
   _, height, width, _ = interpreter.get_input_details()[0]['shape']
 
   with picamera.PiCamera(resolution=(640, 480), framerate=30) as camera:
     rawCapture = PiRGBArray(camera, size = (640,480))
-    #camera.start_preview()
     try:
       stream = io.BytesIO()
       for frame in camera.capture_continuous(
           rawCapture, format='bgr', use_video_port=True):
-        #stream.seek(0)
-        #image = Image.open(rawCapture).resize((width, height),
-        #                                                 Image.ANTIALIAS)
                                                          
 
-#        image = Image.open(rawCapture).convert('RGB').resize((width, height),
-#                                                         Image.ANTIALIAS)
-        ####    
-   #     print(type(frame))
         img_arr = frame.array
-        #img = cv.cvtColor(img_arr,cv.COLOR_BGR2RGB)
-        #img_pil = Image.fromarray(img).resize((width, height), Image.ANTIALIAS)
-
         fgMask = backSub.apply(img_arr)       
-        #cv.rectangle(img_arr, (10,2), (100,2), (255,255,255),-1)
 
         img = cv.cvtColor(img_arr,cv.COLOR_BGR2RGB)
         img_pil = Image.fromarray(img).resize((width, height), Image.ANTIALIAS)
-        #print(type(img))
-        #print(img.size)
-
-       # print('imgpil')
-       # print(img.shape)
-        #print(img_pil.size)
-        #print(type(img_pil))
         start_time = time.time()
-        #fg_mask_pil = Image.fromarray(np.uint8(fgMask)).resize((width,height),Image.ANTIALIAS)
         fg_mask = cv.cvtColor(fgMask,cv.COLOR_BGR2RGB)
-       # print(fgMask.shape)
         fg_mask_pil = Image.fromarray(fgMask).resize((width,height), Image.ANTIALIAS)
-       # print('fgmask pil')
-       # print(type(fg_mask_pil))
-        #results = classify_image(interpreter, img_pil)
         fg_mask_pil = np.expand_dims(fg_mask_pil,3)
         results = classify_image(interpreter, fg_mask_pil)
         elapsed_ms = (time.time() - start_time) * 1000
         label_id, prob = results[0]
-        #######################################################print(label_id)
-        #stream.seek(0)
-        #stream.truncate()
         rawCapture.truncate(0)
         cv.imshow('Frame', img_arr)
         cv.imshow('FG Mask', fgMask)
@@ -137,8 +110,6 @@ def main():
         keyboard = cv.waitKey(30)
         if keyboard == 'q':
             break
-        #camera.annotate_text = '%s %.2f\n%.1fms' % (labels[label_id], prob,
-        #                                            elapsed_ms)
         print('%s %.2f\n%.1fms' % (labels[label_id], prob, elapsed_ms))
         print()
 
