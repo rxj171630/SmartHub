@@ -8,11 +8,16 @@ import HumidityComponent from "./humidity.js"
 import MapsComponent from "./maps.js"
 import AlarmComponent from "./alarm.js"
 import NotesComponent from "./notes.js"
+import WeatherComponent from "./weather.js"
 
 function App() {
   return (
     <div className="App">
     <Header as='h1'>IoT Hub</Header>
+    <Divider/>
+
+    <Header as='h2' textAlign='left'>Weather</Header>
+    <WeatherComponent/>
     <Divider/>
 
     <Header as='h2' textAlign='left'>Thermo</Header>
