@@ -5,11 +5,16 @@ import StocksComponent from "./stocks.js"
 import EventsComponent from "./events.js"
 import ThermoComponent from "./thermo.js"
 import HumidityComponent from "./humidity.js"
+import WeatherComponent from "./weather.js"
 
 function App() {
   return (
     <div className="App">
     <Header as='h1'>IoT Hub</Header>
+    <Divider/>
+
+    <Header as='h2' textAlign='left'>Weather</Header>
+    <WeatherComponent/>
     <Divider/>
 
     <Header as='h2' textAlign='left'>Thermo</Header>
