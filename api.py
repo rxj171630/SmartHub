@@ -1,5 +1,5 @@
 from __future__ import print_function
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask_restful import Resource, Api, reqparse
 import requests
 from flask_cors import CORS, cross_origin
@@ -9,15 +9,17 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
-
-from datetime import timezone
-
+import googlemaps
+import json
 
 app = Flask(__name__)
 api = Api(app)
 
-cors = CORS(app)
-app.config['CORS_HEADERS'] = 'Content-Type'
+parser = reqparse.RequestParser()
+parser.add_argument("src", type=str)
+parser.add_argument("dst", type=str)
+
+cors = CORS(app, resources={r"*": {"origins": "*", "Access-Control-Allow-Origin": "*"}})
 
 class Stocks(Resource):
     def get(self):
@@ -48,6 +50,7 @@ class Thermo(Resource):
         return thermoResp.json()["thermostatList"]
 
 class Calendar(Resource):
+    @cross_origin(origin='*',headers=['Content-Type','Authorization'])
     def get(self):
         SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
         creds = None
@@ -82,7 +85,7 @@ class Calendar(Resource):
                                               orderBy='startTime', timeMax=endTime,
                                               ).execute()
         events = events_result.get('items', [])
-        return events
+        return json.dumps(events)
 
         # if not events:
         #     print('No upcoming events found.')
@@ -90,12 +93,37 @@ class Calendar(Resource):
         #     start = event['start'].get('dateTime', event['start'].get('date'))
         #     print(start, event['summary'])
 
+class Maps(Resource):
+    @cross_origin(origin='*',headers=['Content-Type','Authorization'])
+    def get(self):
+        args = parser.parse_args()
+        print(args)
+        gmaps = googlemaps.Client(key='AIzaSyC2GcW4pAHJuyTJJnsm3fV-krl0nCpOokw')
+        now = datetime.datetime.now()
 
+        dist_mat = gmaps.distance_matrix(origins=args.src,destinations=args.dst,mode='driving',departure_time=now)
+        return dist_mat
+
+class Alarm(Resource):
+    @cross_origin(origin='*',headers=['Content-Type','Authorization'])
+    def get(self):
+        r=requests.get(
+            "https://maker.ifttt.com/trigger/trigger_alarm/with/key/dYp8LQdZcmQ_rlSx-Gfhpn",
+        )
+        return json.dumps({"done": True})
+
+class Notes(Resource):
+    def get(self):
+        response = send_from_directory(directory='./', filename='notes.txt')
+        return response
 
 api.add_resource(Stocks, '/stocks')
 api.add_resource(News, "/news")
 api.add_resource(Thermo, "/thermo")
 api.add_resource(Calendar, "/calendar")
+api.add_resource(Maps, "/maps")
+api.add_resource(Alarm, "/alarm")
+api.add_resource(Notes, "/notes")
 
 if __name__ == '__main__':
     app.run(debug=True, port=8000)

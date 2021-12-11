@@ -5,6 +5,9 @@ import StocksComponent from "./stocks.js"
 import EventsComponent from "./events.js"
 import ThermoComponent from "./thermo.js"
 import HumidityComponent from "./humidity.js"
+import MapsComponent from "./maps.js"
+import AlarmComponent from "./alarm.js"
+import NotesComponent from "./notes.js"
 
 function App() {
   return (
@@ -30,6 +33,18 @@ function App() {
 
     <Header as='h2' textAlign='left'>Events</Header>
     <EventsComponent/>
+    <Divider/>
+
+    <Header as='h2' textAlign='left'>Maps</Header>
+    <MapsComponent/>
+    <Divider/>
+
+    <Header as='h2' textAlign='left'>Alarm</Header>
+    <AlarmComponent/>
+    <Divider/>
+
+    <Header as='h2' textAlign='left'>Notes</Header>
+    <NotesComponent/>
     <Divider/>
 
     </div>
