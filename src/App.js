@@ -9,6 +9,7 @@ import MapsComponent from "./maps.js"
 import AlarmComponent from "./alarm.js"
 import NotesComponent from "./notes.js"
 import WeatherComponent from "./weather.js"
+import RecordComponent from "./record.js"
 
 function App() {
   return (
@@ -50,6 +51,10 @@ function App() {
 
     <Header as='h2' textAlign='left'>Notes</Header>
     <NotesComponent/>
+    <Divider/>
+
+    <Header as='h2' textAlign='left'>Record</Header>
+    <RecordComponent/>
     <Divider/>
 
     </div>

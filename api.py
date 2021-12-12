@@ -11,6 +11,11 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 import googlemaps
 import json
+import pyaudio
+import wave
+import time
+import speech_recognition as sr
+from os import path
 
 app = Flask(__name__)
 api = Api(app)
@@ -20,6 +25,9 @@ parser.add_argument("src", type=str)
 parser.add_argument("dst", type=str)
 
 cors = CORS(app, resources={r"*": {"origins": "*", "Access-Control-Allow-Origin": "*"}})
+
+
+stream = None
 
 class Stocks(Resource):
     def get(self):
@@ -131,6 +139,59 @@ class Weather(Resource):
         )
         return weatherResp.json()["thermostatList"]
 
+recording=False
+class RecordStart(Resource):
+    def get(self):
+        global stream, recording
+        form_1 = pyaudio.paInt16 # 16-bit resolution
+        chans = 1 # 1 channel
+        samp_rate = 44100 # 44.1kHz sampling rate
+        chunk = 4096 # 2^12 samples for buffer
+        record_secs = 5 # seconds to record
+        dev_index = 2 # device index found by p.get_device_info_by_index(ii)
+        wav_output_filename = 'test1.wav' # name of .wav file
+
+        audio = pyaudio.PyAudio() # create pyaudio instantiation
+
+        # create pyaudio stream
+        stream = audio.open(format = form_1,rate = samp_rate,channels = chans, \
+                            input_device_index = dev_index,input = True, \
+                            frames_per_buffer=chunk)
+        print("recording")
+        frames = []
+
+        # loop through stream and append audio chunks to frame array
+        #for ii in range(0,int((samp_rate/chunk)*record_secs)):
+        start = time.time()
+        while(time.time()-start < 5):
+            data = stream.read(chunk)
+            frames.append(data)
+
+        stream.stop_stream()
+        stream.close()
+        audio.terminate()
+
+        # save the audio frames as .wav file
+        wavefile = wave.open(wav_output_filename,'wb')
+        wavefile.setnchannels(chans)
+        wavefile.setsampwidth(audio.get_sample_size(form_1))
+        wavefile.setframerate(samp_rate)
+        wavefile.writeframes(b''.join(frames))
+        wavefile.close()
+
+        # obtain path to "english.wav" in the same folder as this script
+        AUDIO_FILE = path.join(path.dirname(path.realpath(__file__)), "test1.wav")
+        # AUDIO_FILE = path.join(path.dirname(path.realpath(__file__)), "french.aiff")
+        # AUDIO_FILE = path.join(path.dirname(path.realpath(__file__)), "chinese.flac")
+
+        # use the audio file as the audio source
+        r = sr.Recognizer()
+        with sr.AudioFile(AUDIO_FILE) as source:
+            audio = r.record(source)
+
+        with open("notes.txt", "a") as f:
+            f.write(r.recognize_google(audio) + "\n")
+
 api.add_resource(Stocks, '/stocks')
 api.add_resource(News, "/news")
 api.add_resource(Thermo, "/thermo")
@@ -139,6 +200,8 @@ api.add_resource(Maps, "/maps")
 api.add_resource(Alarm, "/alarm")
 api.add_resource(Notes, "/notes")
 api.add_resource(Weather, "/weather")
+api.add_resource(RecordStart, "/recordStart")
+api.add_resource(RecordEnd, "/recordEnd")
 
 if __name__ == '__main__':
     app.run(debug=True, port=8000)
