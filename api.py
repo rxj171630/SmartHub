@@ -46,6 +46,19 @@ class Thermo(Resource):
                                     headers={'Authorization': f'Bearer {accessToken}', 'dataType': 'json'}
         )
         return thermoResp.json()["thermostatList"]
+        
+class Weather(Resource):
+    def get(self):
+        refreshToken = "GCkYLfAoZDxl-bomW27fJQQx1F7ImCSTPTlVO_pTGlz8p";
+        apiKey = "cqnbQLMy6Zu8CuJnFjC1baKWWcL8Fx0K"
+
+        accessTokenResp = requests.post(f"https://api.ecobee.com/token?grant_type=refresh_token&code={refreshToken}&client_id={apiKey}")
+        accessToken = accessTokenResp.json()["access_token"]
+
+        weatherResp = requests.get('https://api.ecobee.com/1/thermostat?json={"selection":{"includeWeather":"true","includeDevice":"false","includeAlerts":"false","selectionType":"registered","selectionMatch":"","includeEvents":"false","includeSettings":"false","includeRuntime":"true"}}',
+                                    headers={'Authorization': f'Bearer {accessToken}', 'dataType': 'json'}
+        )
+        return weatherResp.json()["thermostatList"]        
 
 class Calendar(Resource):
     def get(self):
@@ -96,6 +109,7 @@ api.add_resource(Stocks, '/stocks')
 api.add_resource(News, "/news")
 api.add_resource(Thermo, "/thermo")
 api.add_resource(Calendar, "/calendar")
+api.add_resource(Weather, "/weather")
 
 if __name__ == '__main__':
     app.run(debug=True, port=8000)
