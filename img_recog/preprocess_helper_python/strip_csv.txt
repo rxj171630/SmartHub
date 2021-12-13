@@ -1,0 +1,3 @@
+import pandas as pd
+
+filename = 'C:\\Users\\jackk\\Desktop\\IOT Final Project\\fingers_data_colab_5orNothing.csv'
