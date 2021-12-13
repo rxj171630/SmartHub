@@ -35,7 +35,7 @@ class AlarmComponent extends React.Component {
 
       alert(`Set alarm at ${this.state.hour}:${this.state.minute}`);
       sleep(alarmInput).then(() => {
-           fetch("http://127.0.0.1:8000/alarm").then(res => res.json())
+           fetch("http://192.168.86.41:8000/alarm").then(res => res.json())
            .then(
              (result) => {
                console.log("alarm");

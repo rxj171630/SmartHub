@@ -26,7 +26,7 @@ class WeatherComponent extends React.Component {
   }
 
   componentDidMount() {
-    fetch("http://127.0.0.1:8000/weather")
+    fetch("http://192.168.86.41:8000/weather")
       .then(res => res.json())
       .then(
         (result) => {

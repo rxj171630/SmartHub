@@ -26,7 +26,7 @@ class NotesComponent extends React.Component {
   }
 
   componentDidMount() {
-    fetch("http://127.0.0.1:8000/notes", {"Access-Control-Allow-Origin": "*"})
+    fetch("http://192.168.86.41:8000/notes", {"Access-Control-Allow-Origin": "*"})
       .then(res => res.text())
       .then(
         (result) => {

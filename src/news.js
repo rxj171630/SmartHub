@@ -26,7 +26,7 @@ class NewsComponent extends React.Component {
   }
 
   componentDidMount() {
-    fetch("http://127.0.0.1:8000/news")
+    fetch("http://192.168.86.41:8000/news")
       .then(res => res.json())
       .then(
         (result) => {

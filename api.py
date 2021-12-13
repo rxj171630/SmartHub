@@ -26,6 +26,8 @@ parser.add_argument("dst", type=str)
 
 cors = CORS(app, resources={r"*": {"origins": "*", "Access-Control-Allow-Origin": "*"}})
 
+#exec(open("../Team-IOT-Smart-Hub-master/img_recog/light_trigger.py").read())
+
 
 stream = None
 
@@ -141,11 +143,12 @@ class Weather(Resource):
 
 recording=False
 class RecordStart(Resource):
+    @cross_origin(origin='*',headers=['Content-Type','Authorization'])
     def get(self):
         global stream, recording
         form_1 = pyaudio.paInt16 # 16-bit resolution
         chans = 1 # 1 channel
-        samp_rate = 44100 # 44.1kHz sampling rate
+        samp_rate = 48000 # 44.1kHz sampling rate
         chunk = 4096 # 2^12 samples for buffer
         record_secs = 5 # seconds to record
         dev_index = 2 # device index found by p.get_device_info_by_index(ii)
@@ -191,6 +194,8 @@ class RecordStart(Resource):
 
         with open("notes.txt", "a") as f:
             f.write(r.recognize_google(audio) + "\n")
+        
+        return json.dumps({"done": True}) 
 
 api.add_resource(Stocks, '/stocks')
 api.add_resource(News, "/news")
@@ -201,7 +206,7 @@ api.add_resource(Alarm, "/alarm")
 api.add_resource(Notes, "/notes")
 api.add_resource(Weather, "/weather")
 api.add_resource(RecordStart, "/recordStart")
-api.add_resource(RecordEnd, "/recordEnd")
+#api.add_resource(RecordEnd, "/recordEnd")
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8000)
+    app.run(debug=True,host="0.0.0.0", port=8000)
