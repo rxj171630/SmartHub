@@ -37,7 +37,7 @@ class RecordComponent extends React.Component {
     //     )
     //     this.setState({recording: false});
     // } else {
-    fetch("http://192.168.86.41:8000/recordStart", {"Access-Control-Allow-Origin": "*"}).then(
+    fetch("http://127.0.0.1:8000/recordStart", {"Access-Control-Allow-Origin": "*"}).then(
       (result) => {
         console.log("start");
       },
@@ -45,7 +45,7 @@ class RecordComponent extends React.Component {
         console.log(error);
       }
     )
-    //this.setState({recording: true});
+    this.setState({recording: true});
     // }
   }
 

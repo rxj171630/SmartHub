@@ -26,7 +26,7 @@ class WeatherComponent extends React.Component {
   }
 
   componentDidMount() {
-    fetch("http://192.168.86.41:8000/weather")
+    fetch("http://127.0.0.1:8000/weather")
       .then(res => res.json())
       .then(
         (result) => {
@@ -53,11 +53,11 @@ class WeatherComponent extends React.Component {
     } else {
       return (
           <Statistic.Group>
-                  <Statistic size={"huge"} label={this.state.items[0].condition} value={<Image src={`https://raw.githubusercontent.com/rxj171630/weather-icons/main/icons/${this.state.items[0].symbol}.svg`}/>}/>
-                  <Statistic label={`Weather Station`} value={this.state.items[0].name} size={"mini"} />
-                  <Statistic label={`Current Temp`} value={(this.state.items[0].currentTemp/ 10).toString().concat("˚F")} size={"large"} color={"green"}/>
-                  <Statistic label={`Low Temp`} value={(this.state.items[0].tempLow/ 10).toString().concat("˚F")} size={"large"} color={"blue"}/>
-                  <Statistic label={`High Temp`} value={(this.state.items[0].tempHigh/ 10).toString().concat("˚F")} size={"large"} color={"red"}/>
+                  <Statistic label={`Weather Station`} value={this.state.items[0].name} />
+                  <Statistic label={this.state.items[0].condition} value={<Image src={`./src/icons/0.png`}/>} />
+                  <Statistic label={`Current Temp`} value={(this.state.items[0].currentTemp/ 10).toString().concat("˚F")} />
+                  <Statistic label={`Low Temp`} value={(this.state.items[0].tempLow/ 10).toString().concat("˚F")} />
+                  <Statistic label={`High Temp`} value={(this.state.items[0].tempHigh/ 10).toString().concat("˚F")} />
           </Statistic.Group>
       );
     }

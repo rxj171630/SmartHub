@@ -18,7 +18,7 @@ class MapsComponent extends React.Component {
   handleChange = (e, { name, value }) => this.setState({ [name]: value })
 
   handleSubmit = () => {
-    fetch(`http://192.168.86.41:8000/maps?src=${this.state.src}&dst=${this.state.dst}`)
+    fetch(`http://127.0.0.1:8000/maps?src=${this.state.src}&dst=${this.state.dst}`)
       .then(res => res.json())
       .then(
         (result) => {

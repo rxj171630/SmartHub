@@ -26,7 +26,7 @@ class CalendarComponent extends React.Component {
   }
 
   componentDidMount() {
-    fetch("http://192.168.86.411:8000/calendar", {"Access-Control-Allow-Origin": "*"})
+    fetch("http://127.0.0.1:8000/calendar", {"Access-Control-Allow-Origin": "*"})
       .then(res => res.json())
       .then(
         (result) => {
