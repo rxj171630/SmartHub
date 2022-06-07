@@ -36,8 +36,8 @@ class News(Resource):
 
 class Thermo(Resource):
     def get(self):
-        refreshToken = "GCkYLfAoZDxl-bomW27fJQQx1F7ImCSTPTlVO_pTGlz8p";
-        apiKey = "cqnbQLMy6Zu8CuJnFjC1baKWWcL8Fx0K"
+        refreshToken = "";
+        apiKey = ""
 
         accessTokenResp = requests.post(f"https://api.ecobee.com/token?grant_type=refresh_token&code={refreshToken}&client_id={apiKey}")
         accessToken = accessTokenResp.json()["access_token"]
@@ -49,8 +49,8 @@ class Thermo(Resource):
         
 class Weather(Resource):
     def get(self):
-        refreshToken = "GCkYLfAoZDxl-bomW27fJQQx1F7ImCSTPTlVO_pTGlz8p";
-        apiKey = "cqnbQLMy6Zu8CuJnFjC1baKWWcL8Fx0K"
+        refreshToken = "";
+        apiKey = ""
 
         accessTokenResp = requests.post(f"https://api.ecobee.com/token?grant_type=refresh_token&code={refreshToken}&client_id={apiKey}")
         accessToken = accessTokenResp.json()["access_token"]
