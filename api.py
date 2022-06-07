@@ -60,6 +60,19 @@ class Thermo(Resource):
         )
         return thermoResp.json()["thermostatList"]
 
+class Weather(Resource):
+    def get(self):
+        refreshToken = "";
+        apiKey = ""
+
+        accessTokenResp = requests.post(f"https://api.ecobee.com/token?grant_type=refresh_token&code={refreshToken}&client_id={apiKey}")
+        accessToken = accessTokenResp.json()["access_token"]
+
+        weatherResp = requests.get('https://api.ecobee.com/1/thermostat?json={"selection":{"includeWeather":"true","includeDevice":"false","includeAlerts":"false","selectionType":"registered","selectionMatch":"","includeEvents":"false","includeSettings":"false","includeRuntime":"true"}}',
+                                    headers={'Authorization': f'Bearer {accessToken}', 'dataType': 'json'}
+        )
+        return weatherResp.json()["thermostatList"]
+
 class Calendar(Resource):
     @cross_origin(origin='*',headers=['Content-Type','Authorization'])
     def get(self):
@@ -192,17 +205,17 @@ def speech_stuff():
 
     with open("notes.txt", "a") as f:
         f.write(r.recognize_google(audio) + "\n")
-    
+
 class RecordStart(Resource):
     @cross_origin(origin='*',headers=['Content-Type','Authorization'])
     def get(self):
         Thread(target = speech_stuff).start()
         return json.dumps({"done": True})
-    
+
 command = "python3 ./light_trigger.py"
 os.system("lxterminal -e 'bash -c \""+command+"\"'")
- 
-    
+
+
 api.add_resource(Stocks, '/stocks')
 api.add_resource(News, "/news")
 api.add_resource(Thermo, "/thermo")
